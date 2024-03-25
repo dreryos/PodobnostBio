@@ -4,11 +4,14 @@ library(tidyverse)  # data manipulation
 library(cluster)    # clustering algorithms
 library(factoextra) # clustering algorithms & visualization
 library(dendextend) # for comparing two dendrograms
+library(ggplot2) # for plotting
 
 # Příprava dat
 ## Načtení tabulky
 data <- readXL("C:/Users/marek/Desktop/podobnosti/data.xlsx", rownames=FALSE, header=TRUE, na="", 
   sheet="Odpovědi formuláře 1", stringsAsFactors=TRUE)
+
+data <- read.csv("BioPodobnost.csv", header=TRUE, stringsAsFactors=TRUE)
 
 ## Zobrazení prvních pěti řádků tabulky
 head(data)
@@ -40,6 +43,12 @@ heatmap(as.matrix(distances),
         main = "Participant Distances",
         labRow = data$Jméno, labCol = data$Jméno)
 
+## Heatmapa s čísly
+library(pheatmap)
+ds <- as.matrix(distances)
+
+pheatmap(ds, display_numbers = T)
+
 ## strom
 colnames(distances)
 my_nj <- ape::nj(distances)
@@ -59,7 +68,7 @@ gap_stat <- clusGap(data2, FUN = kmeans, nstart = 25,
 fviz_gap_stat(gap_stat)
 
 ## Klustering
-final <- kmeans(data2, 3, nstart = 25)
+final <- kmeans(data2, 4, nstart = 25)
 fviz_cluster(final, data = data2)
 
 # Hierachical clustering
@@ -114,3 +123,16 @@ plot(hc5, cex = 0.6)
 rect.hclust(hc5, k = 5, border = 2:5)
 
 fviz_cluster(list(data = data2, cluster = sub_grp))
+
+
+#PDF
+pdf('dramat_strom.pdf')
+
+plot(hc5, cex = 0.6)
+rect.hclust(hc5, k = 5, border = 2:5)
+
+fviz_cluster(list(data = data2, cluster = sub_grp))
+
+pheatmap(ds, display_numbers = T)
+
+dev.off()
