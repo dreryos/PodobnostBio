@@ -18,10 +18,10 @@ ui <- fluidPage(
       )
     ),
     tabPanel("Phylostrom",
-      plotOutput("phylostrom", height = "1000px"),
+      plotOutput("phylostrom", height = "1500px", width = "120%"),
     ),
     tabPanel("Dendogram",
-      plotOutput("dendogram", height = "1200px")
+      plotOutput("dendogram", height = "1000px", width = "120%")
     ),
     tabPanel("K Klustry",
       fixedPanel(
@@ -111,6 +111,7 @@ server <- function(input, output, session) {
     d <- distances()
     hc5 <- hclust(d, method = "ward.D2",)
     plot(hc5, cex = 1.2)
+    rect.hclust(hc5, k = 5, border = 2:5)
   })
 
   # K klustry
