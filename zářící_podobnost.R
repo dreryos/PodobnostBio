@@ -21,7 +21,7 @@ ui <- fluidPage(
       plotOutput("phylostrom", height = "1000px"),
     ),
     tabPanel("Dendogram",
-      plotOutput("dendogram", height = "1000px")
+      plotOutput("dendogram", height = "1200px")
     ),
     tabPanel("K Klustry",
       fixedPanel(
