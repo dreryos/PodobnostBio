@@ -8,8 +8,7 @@ library(ggplot2) # for plotting
 
 # Příprava dat
 ## Načtení tabulky
-data <- readXL("C:/Users/marek/Desktop/podobnosti/data.xlsx", rownames=FALSE, header=TRUE, na="", 
-  sheet="Odpovědi formuláře 1", stringsAsFactors=TRUE)
+data <- readXL("odpovědi.xlsx", rownames=FALSE, header=TRUE, na="", stringsAsFactors=TRUE)
 
 data <- read.csv("BioPodobnost.csv", header=TRUE, stringsAsFactors=TRUE)
 
@@ -47,7 +46,7 @@ heatmap(as.matrix(distances),
 library(pheatmap)
 ds <- as.matrix(distances)
 
-pheatmap(ds, display_numbers = T)
+pheatmap(ds, display_numbers = T, clustering_method = "ward.D2")
 
 ## strom
 colnames(distances)
@@ -68,7 +67,7 @@ gap_stat <- clusGap(data2, FUN = kmeans, nstart = 25,
 fviz_gap_stat(gap_stat)
 
 ## Klustering
-final <- kmeans(data2, 4, nstart = 25)
+final <- kmeans(data2, 3, nstart = 25)
 fviz_cluster(final, data = data2)
 
 # Hierachical clustering
@@ -110,7 +109,7 @@ pltree(hc4, cex = 0.6, hang = -1, main = "Dendrogram of diana")
 hc5 <- hclust(d, method = "ward.D2" )
 
 ### Cut tree into 4 groups
-sub_grp <- cutree(hc5, k = 5)
+sub_grp <- cutree(hc5, k = 3)
 
 ### Number of members in each cluster
 table(sub_grp)
@@ -126,13 +125,17 @@ fviz_cluster(list(data = data2, cluster = sub_grp))
 
 
 #PDF
-pdf('dramat_strom.pdf')
+pdf('strom.pdf', width = 23.3, height = 8.2)
 
 plot(hc5, cex = 0.6)
 rect.hclust(hc5, k = 5, border = 2:5)
 
 fviz_cluster(list(data = data2, cluster = sub_grp))
 
-pheatmap(ds, display_numbers = T)
+pheatmap(ds, display_numbers = T, clustering_method = "ward.D2")
 
+dev.off()
+
+pdf('strom.pdf', width = 60, height = 60)
+pheatmap(ds, display_numbers = T, clustering_method = "ward.D2")
 dev.off()
