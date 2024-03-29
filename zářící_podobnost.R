@@ -10,6 +10,7 @@ ui <- fluidPage(
         sidebarPanel(
           includeMarkdown("howto.md"),
           fileInput("upload", NULL, buttonLabel = "Nahraj CSV", multiple = FALSE, accept = ".csv"),
+          includeMarkdown("credits.md")
         ),
         mainPanel(
           tableOutput("head"),
@@ -21,7 +22,12 @@ ui <- fluidPage(
       plotOutput("phylostrom", height = "1000px"),
     ),
     tabPanel("Dendogram",
-      plotOutput("dendogram", height = "1000px")
+    fixedPanel(
+        sliderInput("k_centerD", "Počet K klustrů", min = 1, max = 10, value = 5, step = 1),
+        right = 10,
+        bottom = 10
+      ),
+      plotOutput("dendogram", height = "800px")
     ),
     tabPanel("K Klustry",
       fixedPanel(
@@ -29,7 +35,7 @@ ui <- fluidPage(
         right = 10,
         bottom = 10
       ),
-      plotOutput("kklustry", height = "1000px")
+      plotOutput("kklustry", height = "800px")
     ),
   )
 )
@@ -111,6 +117,7 @@ server <- function(input, output, session) {
     d <- distances()
     hc5 <- hclust(d, method = "ward.D2",)
     plot(hc5, cex = 1.2)
+    rect.hclust(hc5, k = input$k_centerD, border = 2:5)
   })
 
   # K klustry

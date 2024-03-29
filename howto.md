@@ -6,4 +6,4 @@ Tento skript využívá Google Forms, pro zjednodušení práce. Na svůj google
 
 Skript si umí upravit data, pokud není modifikován dotazník. Odstraní *Časová značka* a přejmenuje *Jméno.a.příjmení.* na *Jméno*. Pokud jste dotazník upravovali, je potřeba ho následovně upravit:
 
-| Jméno.a.přijmení.| Otázka1 | Otázka2 | atd. |
+**Jméno a přijmení:**, Otázka1, Otázka2, atd.
