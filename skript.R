@@ -15,6 +15,11 @@ data <- read.csv("BioPodobnost.csv", header=TRUE, stringsAsFactors=TRUE)
 ## Zobrazení prvních pěti řádků tabulky
 head(data)
 
+# Uprav data
+drops <- c("Časová.značka")
+data <- data[ , !(names(data) %in% drops)]
+names(data)[names(data) == "Jméno.a.příjmení."] <- "Jméno"
+
 ## Vyřešit duplikáty
 data <- distinct(data,Jméno, .keep_all= TRUE)
 
