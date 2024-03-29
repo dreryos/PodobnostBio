@@ -8,7 +8,7 @@ library(ggplot2) # for plotting
 
 # Příprava dat
 ## Načtení tabulky
-data <- readXL("odpovědi.xlsx", rownames=FALSE, header=TRUE, na="", stringsAsFactors=TRUE)
+data <- readXL("odpovědi.xlsx", rownames = FALSE, header = TRUE, na = "NIC!", stringsAsFactors = TRUE)
 
 data <- read.csv("BioPodobnost.csv", header=TRUE, stringsAsFactors=TRUE)
 
@@ -17,30 +17,27 @@ head(data)
 
 # Uprav data
 drops <- c("Časová.značka")
-data <- data[ , !(names(data) %in% drops)]
+data <- data[, !(names(data) %in% drops)]
 names(data)[names(data) == "Jméno.a.příjmení."] <- "Jméno"
 
 ## Vyřešit duplikáty
-data <- distinct(data,Jméno, .keep_all= TRUE)
+data <- distinct(data,Jméno, .keep_all = TRUE)
 
 ## Zlepšit čitelnost
-data2 <- data[,-1]
-rownames(data2) <- data[,1]
+data2 <- data[, -1]
+rownames(data2) <- data[, 1]
 
 ## Faktory na čísla
-for (i in 1:ncol(data2)){
-data2[, i] <- as.numeric(data2[, i])
+for (i in seq_len(ncol(data2))){
+  data2[, i] <- as.numeric(data2[, i])
 }
-
-## Místo NA hodit nějaké číslo
-data2[is.na(data2)] <- 20
 
 # Phylostrom
 ## Calculate pairwise distances using Euclidean distance
 distances <- dist(data2)  # Remove the 'Jméno' column
 
 ## Create a heatmap to visualize distances
-heatmap(as.matrix(distances), 
+heatmap(as.matrix(distances),
         Rowv = NA, Colv = NA,
         col = colorRampPalette(c("white", "blue"))(100),
         xlab = "Participants", ylab = "Participants",
@@ -51,17 +48,12 @@ heatmap(as.matrix(distances),
 library(pheatmap)
 ds <- as.matrix(distances)
 
-pheatmap(ds, display_numbers = T, clustering_method = "ward.D2")
-
-## strom
-colnames(distances)
-my_nj <- ape::nj(distances)
-plot(my_nj)
+pheatmap(ds, display_numbers = TRUE, clustering_method = "ward.D2")
 
 # K klustry
 set.seed(123)
 
-## function to compute total within-cluster sum of square 
+## function to compute total within-cluster sum of square
 fviz_nbclust(data2, kmeans, method = "wss")
 
 fviz_nbclust(data2, kmeans, method = "silhouette")

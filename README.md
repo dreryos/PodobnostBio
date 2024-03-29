@@ -5,3 +5,5 @@ Tento skriptík vznikl, jako malý sociální experiment na BioSeznamováku. Ten
 Dalším cílem ho bylo udělat co nejvíce foolproof, aby se mohl použít k rychlému icebreaku ve skupině.
 
 Pro skupiny tak do 20 lidí funguje bez problémů, ve větších skupinách je potřeba upravit velikosti grafů, ne vše je čitelné. U menších skupin může být problém s K klustrováním.
+
+Pro větší hraní a nakouknutí pod kapotu tu je i samostatný R skript, může posloužit k vytvoření pdf apod.
