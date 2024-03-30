@@ -1,7 +1,9 @@
+webr::install("nloptr", repos = "https://astamm.r-universe.dev")
+webr::install("ggrepel", repos = "https://slowkow.r-universe.dev")
+webr::install(shiny)
+
 library(shiny)
 library(markdown)
-#webr::install("nloptr", repos = "https://astamm.r-universe.dev")
-#webr::install("ggrepel", repos = "https://slowkow.r-universe.dev")
 
 # Define UI ----
 ui <- fluidPage(
