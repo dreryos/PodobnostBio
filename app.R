@@ -1,7 +1,3 @@
-webr::install("nloptr", repos = "https://astamm.r-universe.dev")
-webr::install("ggrepel", repos = "https://slowkow.r-universe.dev")
-webr::install(shiny)
-
 library(shiny)
 library(markdown)
 
@@ -15,7 +11,7 @@ ui <- fluidPage(
         sidebarPanel(
           includeMarkdown("howto.md"),
           fileInput("upload", NULL, buttonLabel = "Nahraj CSV nebo XLS/XLSX", multiple = FALSE, accept = c(".csv", ".xlsx", ".xls")),
-          a(href="sample.csv", "Demonstrační CSV", download="sample.csv"),
+          a(href="https://github.com/dreryos/PodobnostBio/blob/main/sample.csv", "Demonstrační CSV", target = "_blank"),
           includeMarkdown("credits.md")
         ),
         mainPanel(
