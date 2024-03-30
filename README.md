@@ -9,4 +9,5 @@ Pro skupiny tak do 20 lidí funguje bez problémů, ve větších skupinách je 
 Pro větší hraní a nakouknutí pod kapotu tu je i samostatný R skript, může posloužit k vytvoření pdf apod.
 
 ## Příklad
+
 ![sample_pheatmap](sample_pheatmap.png)
