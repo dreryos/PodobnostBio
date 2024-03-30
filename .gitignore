@@ -47,6 +47,5 @@ po/*~
 rsconnect/
 
 # Moje soubory
-*.csv
-*.pdf
-*.xlsx
+blbosti/
+docs/

@@ -1,4 +1,5 @@
 library(shiny)
+library(markdown)
 
 # Define UI ----
 ui <- fluidPage(
@@ -8,9 +9,10 @@ ui <- fluidPage(
       "Nahrání souboru",
       sidebarLayout(
         sidebarPanel(
-          includeMarkdown("howto.md"),
+          includeMarkdown("app\\howto.md"),
           fileInput("upload", NULL, buttonLabel = "Nahraj CSV", multiple = FALSE, accept = ".csv"),
-          includeMarkdown("credits.md")
+          a(href="sample.csv", "Demonstrační CSV", download=NA, target="_blank"),
+          includeMarkdown("app\\credits.md")
         ),
         mainPanel(
           tableOutput("head"),
