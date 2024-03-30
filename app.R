@@ -120,7 +120,7 @@ server <- function(input, output, session) {
     data <- fac_data()
     d <- distances()
     hc5 <- hclust(d, method = "ward.D2",)
-    plot(hc5, cex = 1.2)
+    plot(hc5, hang = -1, cex = 1.2)
     rect.hclust(hc5, k = input$k_centerD, border = 2:5)
   })
 
