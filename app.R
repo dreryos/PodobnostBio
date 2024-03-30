@@ -1,5 +1,7 @@
 library(shiny)
 library(markdown)
+#webr::install("nloptr", repos = "https://astamm.r-universe.dev")
+#webr::install("ggrepel", repos = "https://slowkow.r-universe.dev")
 
 # Define UI ----
 ui <- fluidPage(
@@ -9,10 +11,10 @@ ui <- fluidPage(
       "Nahrání souboru",
       sidebarLayout(
         sidebarPanel(
-          includeMarkdown("app\\howto.md"),
-          fileInput("upload", NULL, buttonLabel = "Nahraj CSV", multiple = FALSE, accept = ".csv"),
-          a(href="sample.csv", "Demonstrační CSV", download=NA, target="_blank"),
-          includeMarkdown("app\\credits.md")
+          includeMarkdown("howto.md"),
+          fileInput("upload", NULL, buttonLabel = "Nahraj CSV nebo XLS/XLSX", multiple = FALSE, accept = c(".csv", ".xlsx", ".xls")),
+          a(href="sample.csv", "Demonstrační CSV", download="sample.csv"),
+          includeMarkdown("credits.md")
         ),
         mainPanel(
           tableOutput("head"),
@@ -50,6 +52,7 @@ server <- function(input, output, session) {
     ext <- tools::file_ext(input$upload$name)
     switch(ext,
       csv = read.table(file = input$upload$datapath, sep = ",", header = TRUE, stringsAsFactors = FALSE),
+      xlsx = openxlsx::read.xlsx(xlsxFile = input$upload$datapath, sheet = 1, colNames = TRUE, rowNames = FALSE, skipEmptyRows = FALSE, skipEmptyCols = FALSE),
       validate("Invalid file; Please upload a .csv file")
     )
   })
@@ -59,7 +62,8 @@ server <- function(input, output, session) {
     data <- data()
     drops <- c("Časová.značka")
     data <- data[, !(names(data) %in% drops)]
-    names(data)[names(data) == "Jméno.a.příjmení."] <- "Jméno"
+    old_names <- c("Jméno.a.příjmení.", "Jméno.a.příjmení:")
+    names(data)[match(old_names, names(data))] <- "Jméno"
     return(data)
   })
 
@@ -73,7 +77,7 @@ server <- function(input, output, session) {
 
   # Tabulka
   output$head <- renderTable({
-    rem_dup()
+    tidy_data()
   })
 
   # Faktory na čísla
