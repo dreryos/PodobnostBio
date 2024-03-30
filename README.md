@@ -7,3 +7,6 @@ Dalším cílem ho bylo udělat co nejvíce foolproof, aby se mohl použít k ry
 Pro skupiny tak do 20 lidí funguje bez problémů, ve větších skupinách je potřeba upravit velikosti grafů, ne vše je čitelné. U menších skupin může být problém s K klustrováním.
 
 Pro větší hraní a nakouknutí pod kapotu tu je i samostatný R skript, může posloužit k vytvoření pdf apod.
+
+## Příklad
+![sample_pheatmap](sample_pheatmap.png)
