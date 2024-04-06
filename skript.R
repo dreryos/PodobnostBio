@@ -8,9 +8,9 @@ library(ggplot2) # for plotting
 
 # Příprava dat
 ## Načtení tabulky
-data <- readXL("odpovědi.xlsx", rownames = FALSE, header = TRUE, na = "NIC!", stringsAsFactors = TRUE)
+data <-  openxlsx::read.xlsx("C:\\Users\\marek\\Desktop\\Sešit1.xlsx", sheet = 1, colNames = TRUE, rowNames = FALSE, skipEmptyRows = FALSE, skipEmptyCols = FALSE)
 
-data <- read.csv("BioPodobnost.csv", header=TRUE, stringsAsFactors=TRUE)
+data <- read.csv("C:\\Users\\marek\\Desktop\\blbosti\\BioPodobnostDrama.csv", header=TRUE, stringsAsFactors=TRUE)
 
 ## Zobrazení prvních pěti řádků tabulky
 head(data)

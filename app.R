@@ -1,4 +1,5 @@
 library(shiny)
+library(bslib)
 library(markdown)
 
 # Define UI ----
@@ -39,6 +40,16 @@ ui <- fluidPage(
       ),
       plotOutput("kklustry", height = "800px")
     ),
+    tabPanel("force-directed graph",
+      page_fillable(
+        plotOutput("forcegraph", height = "800px")
+      )
+    ),
+    tabPanel("voronoi mosaic",
+      page_fillable(
+        plotOutput("voronoi.mosaic", height = "800px")
+      )
+    ),
   )
 )
 
@@ -60,7 +71,7 @@ server <- function(input, output, session) {
     data <- data()
     drops <- c("Časová.značka")
     data <- data[, !(names(data) %in% drops)]
-    old_names <- c("Jméno.a.příjmení.", "Jméno.a.příjmení:")
+    old_names <- c("Jméno.a.příjmení.", "Jméno.a.příjmení:", "Jméno.a.přijmení:")
     names(data)[match(old_names, names(data))] <- "Jméno"
     return(data)
   })
@@ -73,7 +84,7 @@ server <- function(input, output, session) {
     return(data)
   })
 
-  # Tabulka
+  # Tabulka (for debug)
   output$head <- renderTable({
     tidy_data()
   })
@@ -119,9 +130,15 @@ server <- function(input, output, session) {
 
     data <- fac_data()
     d <- distances()
+    
     hc5 <- hclust(d, method = "ward.D2",)
     plot(hc5, hang = -1, cex = 1.2)
     rect.hclust(hc5, k = input$k_centerD, border = 2:5)
+
+    # hc5 <- shipunov::Bclust(d, FUN=function(.x)
+    #   hclust(dist(.x, method = "euclidean"), method = "ward.D"),iter=1000, mc.cores=1, monitor=TRUE, bootstrap=TRUE, relative=FALSE, hclist=NULL)
+
+    # plot(hc5, hang = -1, cex = 1.2)
   })
 
   # K klustry
@@ -129,10 +146,41 @@ server <- function(input, output, session) {
     req(input$upload)
 
     data <- fac_data()
+    distances <- as.matrix(distances())
 
     set.seed(123)
     final <- kmeans(data, input$k_center, nstart = 25)
-    factoextra::fviz_cluster(final, data = data, labelsize = 18)
+    factoextra::fviz_cluster(final, data = data, labelsize = 18, repel = TRUE)
+    # FCPS::kmeansClustering(distances, ClusterNo = 5, RandomNo = 1, maxIt = 2000, PlotIt = TRUE,)
+  })
+
+  output$forcegraph <- renderPlot({
+    req(input$upload)
+
+    data <- fac_data()
+    distances <- as.matrix(distances())
+
+    set.seed(123)
+    dist_mi <- 1/distances
+    library(qgraph)
+    qgraph(dist_mi, layout='spring', vsize=3)
+  })
+
+  output$voronoi.mosaic <- renderPlot({
+    #TODO: Někdy jde někdy ne!!
+
+    req(input$upload)
+
+    data <- fac_data()
+    distances <- as.matrix(distances())
+
+    library(MASS)
+    r <- isoMDS(distances)
+
+    set.seed(123)
+    library(tripack)
+    x <- r$points
+    plot(voronoi.mosaic(x[,1], x[,2], duplicate="remove"))
   })
 }
 
