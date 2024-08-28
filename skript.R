@@ -5,12 +5,13 @@ library(cluster)    # clustering algorithms
 library(factoextra) # clustering algorithms & visualization
 library(dendextend) # for comparing two dendrograms
 library(ggplot2) # for plotting
+library(ggdendro)
 
 # Příprava dat
 ## Načtení tabulky
-data <-  openxlsx::read.xlsx("C:\\Users\\marek\\Desktop\\Sešit1.xlsx", sheet = 1, colNames = TRUE, rowNames = FALSE, skipEmptyRows = FALSE, skipEmptyCols = FALSE)
+data <-  openxlsx::read.xlsx("C:\\Users\\marek\\Desktop\\PodobnostBio\\2024.xlsx", sheet = 1, colNames = TRUE, rowNames = FALSE, skipEmptyRows = FALSE, skipEmptyCols = FALSE)
 
-data <- read.csv("C:\\Users\\marek\\Desktop\\blbosti\\BioPodobnostDrama.csv", header=TRUE, stringsAsFactors=TRUE)
+data <- read.csv(".\\2024.csv", header=TRUE, stringsAsFactors=TRUE)
 
 ## Zobrazení prvních pěti řádků tabulky
 head(data)
@@ -51,7 +52,7 @@ ds <- as.matrix(distances)
 pheatmap(ds, display_numbers = TRUE, clustering_method = "ward.D2")
 
 # K klustry
-set.seed(123)
+set.seed(round(as.numeric(Sys.time())))
 
 ## function to compute total within-cluster sum of square
 fviz_nbclust(data2, kmeans, method = "wss")
@@ -120,16 +121,33 @@ rect.hclust(hc5, k = 5, border = 2:5)
 
 fviz_cluster(list(data = data2, cluster = sub_grp))
 
+# Bootstrap
+library(shipunov)
+bb <- Bclust(data2, FUN=function(.x)
+ hclust(dist(.x, method="euclidean"), method="ward.D2"),iter=1000,
+ mc.cores=1, monitor=TRUE, bootstrap=TRUE, relative=FALSE, hclist=NULL)
+Bclabels(bb$hclust, bb$values, threshold=0.5, col="grey", pos=1)
+
+
+# Force graph
+library(qgraph)
+distances <- as.matrix(distances)
+set.seed(round(as.numeric(Sys.time())))
+dist_mi <- 1/distances
+qgraph(dist_mi, layout='spring', vsize=3)
 
 #PDF
-pdf('strom.pdf', width = 23.3, height = 8.2)
+pdf('strom.pdf', paper = "a4r", width = 11.69, height = 8.26, encoding = "CP1250.enc")
 
-plot(hc5, cex = 0.6)
-rect.hclust(hc5, k = 5, border = 2:5)
+par(mar=c(0,0,0,0) + 0.1)
+plot(hc5, cex = 0.7,  main=NULL, xlab='', ylab=NULL, sub= '', axes = FALSE,)
+# rect.hclust(hc5, k = 5, border = 2:5)
 
-fviz_cluster(list(data = data2, cluster = sub_grp))
+# fviz_cluster(list(data = data2, cluster = sub_grp))
 
-pheatmap(ds, display_numbers = T, clustering_method = "ward.D2")
+pheatmap(ds, display_numbers = T, clustering_method = "ward.D2", fontsize = 5, fontsize_number = 3, number_format = "%.1f", legend = FALSE)
+
+qgraph(dist_mi, layout='spring', vsize = 3, mar=c(1,1,1,1))
 
 dev.off()
 
