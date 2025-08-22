@@ -48,4 +48,5 @@ rsconnect/
 
 # Moje soubory
 blbosti/
-*.xlsx
+results/
+data/
