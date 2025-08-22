@@ -12,13 +12,13 @@ Je to jako genetický test, ale místo DNA analyzujeme, jestli míchate krupicov
 
 ## Heatmapa - Tepelná mapa vašich životních rozhodnutí
 
-Heatmapa je jako termovize vašich vztahů, kde barvy odhalují, kdo je vám nablízku a kdo je vaším protipólem v banánovo-cereálním spektru. Červená znamená "duševní příbuzní", modrá znamená "z jiné planety".
+Heatmapa je jako termovize vašich vztahů, kde barvy odhalují, kdo je vám nablízku a kdo je vaším protipólem v banánovo-cereálním spektru. Modrá znamená "duševní příbuzní", červená znamená "z jiné planety".
 
 Tahle barevná mapa odhaluje fascinující pravdu: dva lidé si mohou být neuvěřitelně podobní, aniž by to tušili. Možná s někým nesouhlasíte politicky, ale oba loupe banán stejně a oba preferujete Kofolu - a hoppla, jste si podobnější než bratři! Nebo objevíte, že váš nejlepší přítel je vlastně váš pravý opak v těch nejzákladnějších životních otázkách.
 
-Nejzábavnější jsou ty horké červené skvrny - to jsou dvojice lidí, kteří jsou si tak podobní, že by mohli být klony. Sdílejí stejný postoj k ananasu na pizze, stejně se oblékají (ponožky vs. kalhoty) a dokonce stejně vstávají. To už není náhoda, to je kosmické spojení!
+Nejzábavnější jsou ty ledově modré skvrny - to jsou dvojice lidí, kteří jsou si tak podobní, že by mohli být klony. Sdílejí stejný postoj k ananasu na pizze, stejně se oblékají (ponožky vs. kalhoty) a dokonce stejně vstávají. To už není náhoda, to je kosmické spojení! A ta nejtmavší modrá? To jste vy sami se sebou - perfektní shoda ve všem, logicky.
 
-A pak jsou ty ledově modré oblasti - to jsou lidé, kteří by se nikdy neshodli ani na tom, jaké je venku počasí. Jeden loupe banán od bubáka a míchá krupicovou kaši, druhý je úplný opak. Ale i to je krásné - svět potřebuje rozmanitost, i tu banánovou.
+A pak jsou ty ohnivě červené oblasti - to jsou lidí, kteří by se nikdy neshodli ani na tom, jaké je venku počasí. Jeden loupe banán od bubáka a míchá krupicovou kaši, druhý je úplný opak. Ale i to je krásné - svět potřebuje rozmanitost, i tu banánovou.
 
 Heatmapa vám ukáže mapu lidské diverzity v celé její banánové kráse.
 
