@@ -254,46 +254,6 @@ perform_tsne_analysis <- function(numeric_data, cluster_assignments) {
 }
 
 
-#' Optimize text positioning to avoid overlapping labels in plots
-#'
-#' This function calculates optimal text sizes based on local point density
-#' to minimize label overlap in scatter plots. Points that are closer together
-#' receive smaller text to reduce visual clutter.
-#'
-#' @param x_coords Numeric vector of x-coordinates for text labels.
-#' @param y_coords Numeric vector of y-coordinates for text labels.
-#' @param labels Character vector of text labels (used for length validation).
-#' @param base_cex Numeric value for base text size. Default is 0.7.
-#'
-#' @return Numeric vector of adjusted text sizes (cex values) for each label.
-#'
-#' @examples
-#' text_sizes <- optimize_text_positioning(x_coords, y_coords, labels, 0.8)
-#' text(x_coords, y_coords, labels, cex = text_sizes)
-optimize_text_positioning <- function(x_coords, y_coords, labels, base_cex = 0.7) {
-
-  # Create coordinate matrix for distance calculations
-  coordinate_matrix <- cbind(x_coords, y_coords)
-  
-  # Calculate pairwise distances between all points
-  point_distances <- as.matrix(dist(coordinate_matrix))
-  diag(point_distances) <- Inf  # Exclude self-distances (set to infinity)
-  
-  # Find minimum distance to nearest neighbor for each point
-  min_neighbor_distances <- apply(point_distances, 1, min)
-  
-  # Adjust text size based on local point density
-  # Formula: smaller distances → smaller text size
-  density_adjusted_cex <- pmax(
-    0.4,  # Minimum text size to ensure readability
-    base_cex * pmin(1, min_neighbor_distances / 0.5)  # Scale factor based on distance
-  )
-  
-  # Return vector of adjusted text sizes
-  return(density_adjusted_cex)
-}
-
-
 #' Generate abbreviation legend for participant names
 #'
 #' This function creates standardized abbreviations for participant names
@@ -457,20 +417,12 @@ generate_comprehensive_pdf <- function(clustering_results, distance_data, tsne_r
        pch = 19,                          # Solid circle markers
        cex = 1.2)                         # Point size
   
-  # Calculate optimal text sizes to minimize label overlap
-  optimized_text_sizes <- optimize_text_positioning(
-    tsne_results$coordinates$tsne_x,      # X coordinates for text
-    tsne_results$coordinates$tsne_y,      # Y coordinates for text
-    tsne_results$coordinates$participant_name,  # Text labels
-    base_cex = 0.6                        # Base text size
-  )
-  
-  # Add participant labels with density-adjusted sizes
+  # Add participant labels with fixed size
   text(tsne_results$coordinates$tsne_x,
        tsne_results$coordinates$tsne_y,
        labels = abbreviate(tsne_results$coordinates$participant_name, 3),  # 3-char abbreviations
        pos = 3,                           # Position above points
-       cex = optimized_text_sizes,        # Use calculated sizes
+       cex = 0.9,                         # Fixed text size
        col = "black")                     # Black text color
   
   # Add cluster legend for color interpretation
