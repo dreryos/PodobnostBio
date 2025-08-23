@@ -322,7 +322,7 @@ create_abbreviation_page <- function(legend_data) {
   par(mar = c(1, 1, 3, 1))
   
   # Add main title with enhanced formatting
-  title(main = "Abbreviation Legend for Participant Names", 
+  title(main = "Legenda zkratek jmen ucastniku", 
         cex.main = 1.5,  # Large title text
         font.main = 2)   # Bold font
   
@@ -351,7 +351,7 @@ create_abbreviation_page <- function(legend_data) {
   
   # Add informative footer with metadata
   text(x = 0.5, y = 0.05, 
-       labels = paste("Total participants:", n_participants, "| Generated:", Sys.Date()),
+       labels = paste("Celkem ucastniku:", n_participants, "| Vygenerovano:", Sys.Date()),
        adj = c(0.5, 0.5),  # Center-aligned
        cex = 0.7,          # Smaller footer text
        font = 3,           # Italic font style
