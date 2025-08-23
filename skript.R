@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
 })
 
 # Set locale for proper character encoding
-Sys.setlocale("LC_ALL", Sys.getenv("LANG"))  # Ensures proper handling of Czech characters
+Sys.setlocale("LC_ALL", "Czech")  # Ensures proper handling of Czech characters
 
 # Configuration parameters -------------------------------------------------------
 CLUSTERING_GROUPS <- 3          # Number of clusters to create
@@ -52,24 +52,35 @@ load_and_prepare_data <- function(csv_path) {
     stop("Error: File '", csv_path, "' not found. Please check the file path.")
   }
   
-  # Load data from CSV file with semicolon separator
-  participant_data <- read.csv(csv_path, header = TRUE, stringsAsFactors = TRUE, sep = ";")
+  # Load data from CSV file with semicolon separator and UTF-8 encoding
+  participant_data <- read.csv(csv_path, header = TRUE, stringsAsFactors = FALSE, sep = ";", 
+                              fileEncoding = "UTF-8")
+  
+  # Get column names and find the participant name column
+  col_names <- colnames(participant_data)
+  participant_col <- col_names[1]  # First column should be participant names
+  
+  cat("Found columns:", paste(col_names, collapse = ", "), "\n")
+  cat("Using participant column:", participant_col, "\n")
   
   # Clean and prepare data using pipeline approach
   cleaned_data <- participant_data |>
     # Remove timestamp column that's not needed for analysis
     select(-matches("Časová.značka")) |>
     # Rename participant name column for consistency across the analysis
-    rename(participant_name = matches("Jméno.a.příjmení.")) |>
+    rename(participant_name = all_of(participant_col)) |>
     # Remove duplicates based on participant name to ensure unique entries
     distinct(participant_name, .keep_all = TRUE)
   
   # Separate numeric data for analysis
   numeric_data <- cleaned_data |>
-    # Remove the participant name column to keep only numeric variables
+    # Remove the participant name column to keep only categorical variables
     select(-participant_name) |>
-    # Convert all columns to numeric (vectorized operation for efficiency)
-    mutate(across(everything(), as.numeric))
+    # Convert all columns to factors first, then to numeric (vectorized operation for efficiency)
+    mutate(across(everything(), function(x) as.numeric(as.factor(x))))
+  
+  # Remove any columns that are all NA (if conversion failed completely)
+  numeric_data <- numeric_data[, colSums(is.na(numeric_data)) < nrow(numeric_data)]
   
   # Set row names for clustering algorithms that require named rows
   rownames(numeric_data) <- cleaned_data$participant_name
@@ -272,6 +283,7 @@ perform_tsne_analysis <- function(numeric_data, cluster_assignments) {
 generate_abbreviation_legend <- function(participant_names) {
 
   # Create standardized abbreviations with minimum 3 characters
+  # Use participant names directly without encoding conversion
   abbreviations <- abbreviate(participant_names, minlength = 3)
   
   # Create structured data frame with full names and abbreviations
@@ -371,8 +383,11 @@ generate_comprehensive_pdf <- function(clustering_results, distance_data, tsne_r
 
   cat("Generating comprehensive PDF report...\n")  # Progress indicator
   
-  # Initialize main PDF document with landscape A4 orientation
-  pdf('./results/biosimilarity_analysis.pdf', paper = "a4r", width = 11.69, height = 8.26)
+  # Set up PDF output with Cairo backend for better Unicode support
+  cairo_pdf('./results/biosimilarity_analysis.pdf', width = 11.69, height = 8.26)
+  
+  # Set font family that supports Czech characters
+  par(family = "sans")
   
   # Page 1: Hierarchical clustering dendrogram
   par(mar = c(0, 0, 0, 0) + 0.1)  # Minimal margins for full-page plot
@@ -396,9 +411,12 @@ generate_comprehensive_pdf <- function(clustering_results, distance_data, tsne_r
   # Page 3: Force-directed network graph
   # Convert distances to similarities (inverse relationship)
   inverse_distances <- 1 / distance_data$matrix
+  # Use original participant names for labels
+  clean_labels <- abbreviate(rownames(distance_data$matrix), minlength = 3)
   qgraph(inverse_distances,
          layout = 'spring',           # Spring-force layout algorithm
          vsize = 3,                   # Node size
+         labels = clean_labels,       # Use original labels
          mar = c(1, 1, 1, 1))        # Plot margins
   
   # Page 4: t-SNE visualization with optimized text positioning
@@ -440,7 +458,8 @@ generate_comprehensive_pdf <- function(clustering_results, distance_data, tsne_r
   dev.off()
   
   # Generate separate high-resolution heatmap PDF for detailed analysis
-  pdf('./results/detailed_heatmap.pdf', width = 60, height = 60)  # Large format for high detail
+  cairo_pdf('./results/detailed_heatmap.pdf', width = 60, height = 60)  # Large format with Cairo for Unicode
+  par(family = "sans")  # Set font family that supports Czech characters
   pheatmap(distance_data$matrix,
            display_numbers = TRUE,          # Show all distance values
            clustering_method = "ward.D2")   # Use same clustering method
@@ -506,7 +525,8 @@ run_biosimilarity_analysis <- function(data_file_path = "./2025.csv") {
   
   # Step 6: Export abbreviation legend as standalone CSV file for reference
   legend_data <- generate_abbreviation_legend(data_results$participant_names)
-  write.csv(legend_data, "./results/participant_abbreviations.csv", row.names = FALSE)  # No row numbers
+  write.csv(legend_data, "./results/participant_abbreviations.csv", row.names = FALSE, 
+            fileEncoding = "UTF-8")  # UTF-8 encoding for CSV output
   cat("Abbreviation legend exported to: ./results/participant_abbreviations.csv\n")
   
   # Pipeline completion message
