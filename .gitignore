@@ -50,4 +50,7 @@ rsconnect/
 blbosti/
 results/
 data/
+renv/
 *.afpub
+*.DS_Store
+renv.lock
